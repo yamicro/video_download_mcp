@@ -13,7 +13,6 @@ app = FastMCP("any-video-downloader")
 
 @app.tool()
 def list_cookies() -> list[str]:
-    """列出可用 Cookie 文件名（位于 ./cookies/ 目录）"""
     return [p.name for p in Path("cookies").glob("*.cookies")]
 
 @app.tool()
@@ -60,10 +59,10 @@ async def _try(url, outdir, fmt, cookiefile):
         await asyncio.get_running_loop().run_in_executor(
             None, lambda: yt_dlp.YoutubeDL(ydl_opts).download([url])
         )
-        log.info("✅ 下载完成")
+        log.info("下载完成")
         return {"status": "ok", "path": ydl_opts["outtmpl"]}
     except yt_dlp.DownloadError as e:
-        log.error("❌ DownloadError: %s", e)
+        log.error("DownloadError: %s", e)
         return {"status": "error", "reason": str(e)}
 
 
@@ -72,9 +71,9 @@ def _hook(d):
         pct = d.get("_percent_str", "").strip()
         log.debug(f"… {pct} {d.get('filename','')}")
     elif d["status"] == "finished":
-        log.debug("🎬 正在合并流…")
+        log.debug("正在合并流…")
 
 
 if __name__ == "__main__":
-    log.info("🚀 any-video-downloader ready")
+    log.info("any-video-downloader ready")
     app.run(transport="stdio")
